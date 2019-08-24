@@ -2,7 +2,7 @@
 // File: mainwindow.cpp
 //-----------------------------------------------------------------------------
 // Project: Kactus 2
-// Author: Joni-Matti Määttä
+// Author: Joni-Matti Mï¿½ï¿½ttï¿½
 // Date: 24.2.2011
 //
 // Description:
@@ -33,6 +33,8 @@
 #include <mainwindow/DrawingBoard/DrawingBoard.h>
 #include <mainwindow/SaveHierarchy/DocumentTreeBuilder.h>
 #include <mainwindow/SaveHierarchy/SaveHierarchyDialog.h>
+#include <mainwindow/PoshConfigDialog.h>
+//#include <mainwindow/PoshScriptProcess.h>
 
 #include <common/NameGenerationPolicy.h>
 #include <common/dialogs/LibrarySettingsDialog/LibrarySettingsDialog.h>
@@ -112,6 +114,8 @@
 #include <QDesktopServices>
 #include <QPainter>
 #include <QDateTime>
+#include <QProcess>
+#include <QFileInfo>
 
 //-----------------------------------------------------------------------------
 // Function: MainWindow::MainWindow()
@@ -158,6 +162,8 @@ protectGroup_(0),
 actRefresh_(0),
 actProtect_(0),
 actSettings_(0),
+actPoshSim_(0),
+actPoshConf_(0),
 actAbout_(0),
 actHelp_(0),
 actExit_(0),
@@ -177,8 +183,11 @@ windowsMenu_(this),
 visibilityMenu_(this),
 workspaceMenu_(this),
 curWorkspaceName_("Default"),
-messageChannel_(messageChannel)
-{    
+messageChannel_(messageChannel),
+poshScriptName_(""),
+poshScriptEngine_(""),
+poshProcess_(this)
+{
     setWindowTitle(QCoreApplication::applicationName());
     setWindowIcon(QIcon(":icons/common/graphics/appicon.png"));
 
@@ -190,7 +199,7 @@ messageChannel_(messageChannel)
         "QCheckBox::indicator:unchecked { image: url(:icons/common/graphics/traffic-light_gray.png);}"
         "QCheckBox::indicator:checked { image: url(:icons/common/graphics/traffic-light_green.png);}"
         "QGroupBox::title { subcontrol-origin: margin; margin: 0 8px; }"
-        "QGroupBox::indicator:unchecked {image: url(:icons/common/graphics/traffic-light_gray.png);}"        
+        "QGroupBox::indicator:unchecked {image: url(:icons/common/graphics/traffic-light_gray.png);}"
         "QGroupBox::indicator:checked {image: url(:icons/common/graphics/traffic-light_green.png);}"
         "QTableView::indicator:checked {image: url(:icons/common/graphics/checkMark.png);}"
         "QTableView::indicator:unchecked {image: none;}"
@@ -524,7 +533,7 @@ void MainWindow::setupActions()
     // the action to search for IP-Xact documents in file system
     actLibrarySearch_ = new QAction(QIcon(":/icons/common/graphics/library-refresh.png"),
         tr("Refresh Library"), this);
-    connect(actLibrarySearch_, SIGNAL(triggered()),	this, SLOT(onLibrarySearch()), Qt::UniqueConnection);
+    connect(actLibrarySearch_, SIGNAL(triggered()), this, SLOT(onLibrarySearch()), Qt::UniqueConnection);
 
     // Check the library integrity
     actCheckIntegrity_ = new QAction(QIcon(":/icons/common/graphics/checkIntegrity.png"),
@@ -682,7 +691,7 @@ void MainWindow::setupActions()
     connect(openMemoryDesignerAction_, SIGNAL(triggered()), this, SLOT(openMemoryDesign()), Qt::UniqueConnection);
 
     // Initialize the action to manage workspaces.
-    actWorkspaces_ = new QAction(QIcon(":icons/common/graphics/workspace.png"),	tr("Workspaces"), this);
+    actWorkspaces_ = new QAction(QIcon(":icons/common/graphics/workspace.png"), tr("Workspaces"), this);
     connect(actWorkspaces_, SIGNAL(triggered()), this, SLOT(openWorkspaceMenu()), Qt::UniqueConnection);
     actWorkspaces_->setMenu(&workspaceMenu_);
 
@@ -699,6 +708,12 @@ void MainWindow::setupActions()
     // Initialize the action to open Kactus2 settings.
     actSettings_ = new QAction(QIcon(":/icons/common/graphics/system-settings.png"), tr("Settings"), this);
     connect(actSettings_, SIGNAL(triggered()), this, SLOT(openSettings()));
+
+    actPoshSim_ = new QAction(QIcon(":/icons/common/graphics/posh-build-sim_1.png"), tr("POSH Simulation"), this);
+    connect(actPoshSim_, SIGNAL(triggered()), this, SLOT(buildPoshSimulation()));
+
+    actPoshConf_ = new QAction(QIcon(":/icons/common/graphics/posh-config_2.png"), tr("POSH Configuration"), this);
+    connect(actPoshConf_, SIGNAL(triggered()), this, SLOT(configPoshSimulation()));
 
     // Initialize the action to open the about box.
     actAbout_= new QAction(QIcon(":/icons/common/graphics/system-about.png"), tr("About"), this);
@@ -898,6 +913,13 @@ void MainWindow::setupMenus()
     sysGroup->widgetForAction(actHelp_)->installEventFilter(ribbon_);
     sysGroup->widgetForAction(actAbout_)->installEventFilter(ribbon_);
     sysGroup->widgetForAction(actExit_)->installEventFilter(ribbon_);
+
+    RibbonGroup* poshGroup = ribbon_->addGroup(tr("POSH"));
+    poshGroup->addAction(actPoshConf_);
+    poshGroup->addAction(actPoshSim_);
+
+    poshGroup->widgetForAction(actPoshConf_)->installEventFilter(ribbon_);
+    poshGroup->widgetForAction(actPoshSim_)->installEventFilter(ribbon_);
 
     // the menu to display the dock widgets
     dockHandler_->setupVisibilityActionMenu(windowsMenu_);
@@ -2108,6 +2130,43 @@ void MainWindow::openSettings()
     }
 }
 
+
+//-----------------------------------------------------------------------------
+// Function: buildPoshSimulation()
+//-----------------------------------------------------------------------------
+void MainWindow::buildPoshSimulation()
+{
+    QFileInfo fileInfo(poshScriptName_);
+    QProcess& scriptProcess = poshProcess_.getProcess();
+
+    if(fileInfo.exists() && fileInfo.isFile()){
+        const QString script(poshScriptName_);
+        const QString cmd(poshScriptEngine_);
+        const QStringList args(script);
+
+        scriptProcess.start(cmd, args);
+
+    } else {
+        emit errorMessage("Please select a valid script name by clicking"
+        " on the POSH configuration button");
+    }
+}
+
+//-----------------------------------------------------------------------------
+// Function: buildPoshSimulation()
+//-----------------------------------------------------------------------------
+void MainWindow::configPoshSimulation()
+{
+    PoshConfigDialog poshConfig;
+
+    if(QDialog::Accepted == poshConfig.exec()){
+        poshScriptName_ = poshConfig.getScriptName();
+        poshScriptEngine_ = poshConfig.getScriptEngine();
+    }
+
+    return;
+}
+
 //-----------------------------------------------------------------------------
 // Function: mainwindow::createSystem()
 //-----------------------------------------------------------------------------
@@ -2580,11 +2639,11 @@ void MainWindow::openCatalog(const VLNV& vlnv)
     {
         return;
     }
- 
+
     if (!libraryHandler_->contains(vlnv))
     {
         emit errorMessage(tr("VLNV %1 was not found in the library").arg(vlnv.toString()));
-        return;            
+        return;
     }
 
     QSharedPointer<Catalog> catalog = libraryHandler_->getModel(vlnv).dynamicCast<Catalog>();
