@@ -112,6 +112,7 @@
 #include <QDesktopServices>
 #include <QPainter>
 #include <QDateTime>
+#include <QProcess>
 
 //-----------------------------------------------------------------------------
 // Function: MainWindow::MainWindow()
@@ -702,7 +703,7 @@ void MainWindow::setupActions()
     connect(actSettings_, SIGNAL(triggered()), this, SLOT(openSettings()));
 
     actPoshSim_ = new QAction(QIcon(":/icons/common/graphics/posh-sim-icon.png"), tr("POSH Simulation"), this);
-    connect(actPoshSim_, SIGNAL(triggered()), this, SLOT(openSettings()));
+    connect(actPoshSim_, SIGNAL(triggered()), this, SLOT(buildPoshSimulation()));
 
     // Initialize the action to open the about box.
     actAbout_= new QAction(QIcon(":/icons/common/graphics/system-about.png"), tr("About"), this);
@@ -2112,6 +2113,32 @@ void MainWindow::openSettings()
         designTabs_->applySettings();
         updateGeneratorPluginActions();
     }
+}
+
+
+//-----------------------------------------------------------------------------
+// Function: buildPoshSimulation()
+//-----------------------------------------------------------------------------
+void MainWindow::buildPoshSimulation()
+{
+    const QString script("/home/sakisp/development/experimental/kactus2dev/scripts/poshSimBuilder.py");
+    const QString cmd("python3");
+    const QStringList args(script);
+
+    emit noticeMessage("Launcing Script: " + cmd +  " " + script);
+    QProcess *scriptProcess = new QProcess();
+    if(scriptProcess){
+
+        scriptProcess->startDetached(cmd, args);
+        scriptProcess->waitForFinished();
+        scriptProcess->close();
+
+        delete scriptProcess;
+    }
+
+    emit noticeMessage("Script Done");
+
+    return;
 }
 
 //-----------------------------------------------------------------------------

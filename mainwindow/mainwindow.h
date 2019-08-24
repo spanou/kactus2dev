@@ -363,6 +363,11 @@ public slots:
     void openSettings();
 
     /*!
+     * Launches the POSH simulation build script.
+     */
+    void buildPoshSimulation();
+
+    /*!
      *  Shows the about box.
      */
     void showAbout();
