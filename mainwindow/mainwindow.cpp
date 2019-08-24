@@ -158,6 +158,7 @@ protectGroup_(0),
 actRefresh_(0),
 actProtect_(0),
 actSettings_(0),
+actPoshSim_(0),
 actAbout_(0),
 actHelp_(0),
 actExit_(0),
@@ -178,7 +179,7 @@ visibilityMenu_(this),
 workspaceMenu_(this),
 curWorkspaceName_("Default"),
 messageChannel_(messageChannel)
-{    
+{
     setWindowTitle(QCoreApplication::applicationName());
     setWindowIcon(QIcon(":icons/common/graphics/appicon.png"));
 
@@ -190,7 +191,7 @@ messageChannel_(messageChannel)
         "QCheckBox::indicator:unchecked { image: url(:icons/common/graphics/traffic-light_gray.png);}"
         "QCheckBox::indicator:checked { image: url(:icons/common/graphics/traffic-light_green.png);}"
         "QGroupBox::title { subcontrol-origin: margin; margin: 0 8px; }"
-        "QGroupBox::indicator:unchecked {image: url(:icons/common/graphics/traffic-light_gray.png);}"        
+        "QGroupBox::indicator:unchecked {image: url(:icons/common/graphics/traffic-light_gray.png);}"
         "QGroupBox::indicator:checked {image: url(:icons/common/graphics/traffic-light_green.png);}"
         "QTableView::indicator:checked {image: url(:icons/common/graphics/checkMark.png);}"
         "QTableView::indicator:unchecked {image: none;}"
@@ -700,6 +701,9 @@ void MainWindow::setupActions()
     actSettings_ = new QAction(QIcon(":/icons/common/graphics/system-settings.png"), tr("Settings"), this);
     connect(actSettings_, SIGNAL(triggered()), this, SLOT(openSettings()));
 
+    actPoshSim_ = new QAction(QIcon(":/icons/common/graphics/posh-sim-icon.png"), tr("POSH Simulation"), this);
+    connect(actPoshSim_, SIGNAL(triggered()), this, SLOT(openSettings()));
+
     // Initialize the action to open the about box.
     actAbout_= new QAction(QIcon(":/icons/common/graphics/system-about.png"), tr("About"), this);
     connect(actAbout_, SIGNAL(triggered()), this, SLOT(showAbout()), Qt::UniqueConnection);
@@ -890,11 +894,13 @@ void MainWindow::setupMenus()
     //! The "System" group.
     RibbonGroup* sysGroup = ribbon_->addGroup(tr("System"));
     sysGroup->addAction(actSettings_);
+    sysGroup->addAction(actPoshSim_);
     sysGroup->addAction(actHelp_);
     sysGroup->addAction(actAbout_);
     sysGroup->addAction(actExit_);
 
     sysGroup->widgetForAction(actSettings_)->installEventFilter(ribbon_);
+    sysGroup->widgetForAction(actPoshSim_)->installEventFilter(ribbon_);
     sysGroup->widgetForAction(actHelp_)->installEventFilter(ribbon_);
     sysGroup->widgetForAction(actAbout_)->installEventFilter(ribbon_);
     sysGroup->widgetForAction(actExit_)->installEventFilter(ribbon_);
@@ -2580,11 +2586,11 @@ void MainWindow::openCatalog(const VLNV& vlnv)
     {
         return;
     }
- 
+
     if (!libraryHandler_->contains(vlnv))
     {
         emit errorMessage(tr("VLNV %1 was not found in the library").arg(vlnv.toString()));
-        return;            
+        return;
     }
 
     QSharedPointer<Catalog> catalog = libraryHandler_->getModel(vlnv).dynamicCast<Catalog>();

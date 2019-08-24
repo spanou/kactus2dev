@@ -54,7 +54,7 @@ public:
      *      @param [in] parent    The parent widget.
      */
     MainWindow(LibraryHandler* library, MessageMediator* messageChannel, QWidget *parent = 0);
-    
+
 	/*!
      *  The destructor.
      */
@@ -91,17 +91,17 @@ public slots:
 
     /*!
      *  Opens the memory design of the current HW design.
-     *  
+     *
      */
-    void openMemoryDesign(); 
+    void openMemoryDesign();
 
     /*!
      *  Opens the memory design of the HW design specified by the component VLNV and view name.
-     *  
+     *
      *      @param [in] vlnv            The VLNV of the top-level component.
      *      @param [in] viewName        Name of the view to open.
      */
-    void openMemoryDesign(const VLNV& vlnv, const QString& viewName = QString());    
+    void openMemoryDesign(const VLNV& vlnv, const QString& viewName = QString());
 
     /*!
      *  Opens a SW design.
@@ -547,7 +547,7 @@ private:
 	 */
 	void restoreSettings();
 
-	/*! 
+	/*!
      *  Save the program's settings.
 	 */
 	void saveSettings();
@@ -627,9 +627,9 @@ private:
      *  Check if a document with the given vlnv is already open.
 	 *
 	 *      @param [in] vlnv    The vlnv that identifies the document.
-	 * 
+	 *
 	 *      @remark If a document with given vlnv is open then the document is shown.
-	 * 
+	 *
 	 *      @return True if the document was already open.
 	 */
 	bool isOpen(const VLNV& vlnv) const;
@@ -647,12 +647,12 @@ private:
     void updateVisibilityControlMenu(TabDocument* document);
 
     /*!
-     *  Connects all the visibility controls for windows.     
+     *  Connects all the visibility controls for windows.
      */
     void connectVisibilityControls();
 
     /*!
-     *  Disconnects all the visibility controls for windows.     
+     *  Disconnects all the visibility controls for windows.
      */
     void disconnectVisibilityControls();
 
@@ -663,7 +663,7 @@ private:
      *      @param [in] directory   The directory containing the component xml file.
      */
     void runComponentWizard(QSharedPointer<Component> component, QString const& directory);
-    
+
 
 	/*!
 	 *  Set the visibilities for the plug ins.
@@ -676,7 +676,7 @@ private:
 
 	//! The instance that manages the IP-Xact library
     LibraryHandler *libraryHandler_;
-    
+
 	//! Contains the open documents as each in it's own tab.
 	DrawingBoard* designTabs_;
 
@@ -787,7 +787,7 @@ private:
     QAction* actWorkspaces_;
 
     //! The protection group.
-    RibbonGroup* protectGroup_; 
+    RibbonGroup* protectGroup_;
 
     //! Action to refresh the current document.
     QAction* actRefresh_;
@@ -797,6 +797,9 @@ private:
 
     //! Action to open Kactus2 settings.
     QAction* actSettings_;
+
+    //! Action to run posh simulation.
+    QAction* actPoshSim_;
 
     //! Action to show the about box.
     QAction* actAbout_;
@@ -856,7 +859,7 @@ private:
 
     //! The name of the currently active workspace.
     QString curWorkspaceName_;
-    
+
     MessageMediator* messageChannel_;
 };
 
