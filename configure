@@ -2,9 +2,9 @@
 
 echo "Configuring Kactus2..."
 echo ""
-QTBIN_PATH=""
+QTBIN_PATH="/home/sakisp/development/qt/Qt5.13.0/5.13.0/gcc_64/bin/"
 
-print_success() { 
+print_success() {
     if [ -f "Makefile" ];
     then
         echo ""
