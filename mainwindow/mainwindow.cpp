@@ -2,7 +2,7 @@
 // File: mainwindow.cpp
 //-----------------------------------------------------------------------------
 // Project: Kactus 2
-// Author: Joni-Matti Määttä
+// Author: Joni-Matti Mï¿½ï¿½ttï¿½
 // Date: 24.2.2011
 //
 // Description:
@@ -160,6 +160,7 @@ actRefresh_(0),
 actProtect_(0),
 actSettings_(0),
 actPoshSim_(0),
+actPoshConf_(0),
 actAbout_(0),
 actHelp_(0),
 actExit_(0),
@@ -702,8 +703,11 @@ void MainWindow::setupActions()
     actSettings_ = new QAction(QIcon(":/icons/common/graphics/system-settings.png"), tr("Settings"), this);
     connect(actSettings_, SIGNAL(triggered()), this, SLOT(openSettings()));
 
-    actPoshSim_ = new QAction(QIcon(":/icons/common/graphics/posh-sim-icon.png"), tr("POSH Simulation"), this);
+    actPoshSim_ = new QAction(QIcon(":/icons/common/graphics/posh-build-sim_1.png"), tr("POSH Simulation"), this);
     connect(actPoshSim_, SIGNAL(triggered()), this, SLOT(buildPoshSimulation()));
+
+    actPoshConf_ = new QAction(QIcon(":/icons/common/graphics/posh-config_2.png"), tr("POSH Configuration"), this);
+    connect(actPoshConf_, SIGNAL(triggered()), this, SLOT(buildPoshSimulation()));
 
     // Initialize the action to open the about box.
     actAbout_= new QAction(QIcon(":/icons/common/graphics/system-about.png"), tr("About"), this);
@@ -895,16 +899,21 @@ void MainWindow::setupMenus()
     //! The "System" group.
     RibbonGroup* sysGroup = ribbon_->addGroup(tr("System"));
     sysGroup->addAction(actSettings_);
-    sysGroup->addAction(actPoshSim_);
     sysGroup->addAction(actHelp_);
     sysGroup->addAction(actAbout_);
     sysGroup->addAction(actExit_);
 
     sysGroup->widgetForAction(actSettings_)->installEventFilter(ribbon_);
-    sysGroup->widgetForAction(actPoshSim_)->installEventFilter(ribbon_);
     sysGroup->widgetForAction(actHelp_)->installEventFilter(ribbon_);
     sysGroup->widgetForAction(actAbout_)->installEventFilter(ribbon_);
     sysGroup->widgetForAction(actExit_)->installEventFilter(ribbon_);
+
+    RibbonGroup* poshGroup = ribbon_->addGroup(tr("POSH"));
+    poshGroup->addAction(actPoshConf_);
+    poshGroup->addAction(actPoshSim_);
+
+    poshGroup->widgetForAction(actPoshConf_)->installEventFilter(ribbon_);
+    poshGroup->widgetForAction(actPoshSim_)->installEventFilter(ribbon_);
 
     // the menu to display the dock widgets
     dockHandler_->setupVisibilityActionMenu(windowsMenu_);

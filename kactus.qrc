@@ -50,6 +50,8 @@
         <file>common/graphics/new-api_definition.png</file>
         <file>common/graphics/appicon.png</file>
         <file>common/graphics/posh-sim-icon.png</file>
+        <file>common/graphics/posh-build-sim_1.png</file>
+        <file>common/graphics/posh-config_2.png</file>
         <file>common/graphics/settings-general.png</file>
         <file>common/graphics/settings-code_editor.png</file>
         <file>common/graphics/settings-file_types.png</file>

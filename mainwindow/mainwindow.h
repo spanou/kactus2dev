@@ -2,7 +2,7 @@
 // File: mainwindow.h
 //-----------------------------------------------------------------------------
 // Project: Kactus 2
-// Author: Joni-Matti Määttä
+// Author: Joni-Matti Mï¿½ï¿½ttï¿½
 // Date: 24.2.2011
 //
 // Description:
@@ -805,6 +805,9 @@ private:
 
     //! Action to run posh simulation.
     QAction* actPoshSim_;
+
+    //! Action to run posh configuration.
+    QAction* actPoshConf_;
 
     //! Action to show the about box.
     QAction* actAbout_;
