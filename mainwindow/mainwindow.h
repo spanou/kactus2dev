@@ -368,6 +368,11 @@ public slots:
     void buildPoshSimulation();
 
     /*!
+     * Launches the POSH simulation config dialog.
+     */
+    void configPoshSimulation();
+
+    /*!
      *  Shows the about box.
      */
     void showAbout();
@@ -869,6 +874,9 @@ private:
     QString curWorkspaceName_;
 
     MessageMediator* messageChannel_;
+
+    //! The name of the posh script file.
+    QString poshScriptName_;
 };
 
 #endif // MAINWINDOW_H

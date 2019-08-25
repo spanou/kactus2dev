@@ -113,6 +113,7 @@
 #include <QPainter>
 #include <QDateTime>
 #include <QProcess>
+#include <QFileInfo>
 
 //-----------------------------------------------------------------------------
 // Function: MainWindow::MainWindow()
@@ -180,6 +181,7 @@ windowsMenu_(this),
 visibilityMenu_(this),
 workspaceMenu_(this),
 curWorkspaceName_("Default"),
+poshScriptName_(""),
 messageChannel_(messageChannel)
 {
     setWindowTitle(QCoreApplication::applicationName());
@@ -707,7 +709,7 @@ void MainWindow::setupActions()
     connect(actPoshSim_, SIGNAL(triggered()), this, SLOT(buildPoshSimulation()));
 
     actPoshConf_ = new QAction(QIcon(":/icons/common/graphics/posh-config_2.png"), tr("POSH Configuration"), this);
-    connect(actPoshConf_, SIGNAL(triggered()), this, SLOT(buildPoshSimulation()));
+    connect(actPoshConf_, SIGNAL(triggered()), this, SLOT(configPoshSimulation()));
 
     // Initialize the action to open the about box.
     actAbout_= new QAction(QIcon(":/icons/common/graphics/system-about.png"), tr("About"), this);
@@ -2130,22 +2132,60 @@ void MainWindow::openSettings()
 //-----------------------------------------------------------------------------
 void MainWindow::buildPoshSimulation()
 {
-    const QString script("/home/sakisp/development/experimental/kactus2dev/scripts/poshSimBuilder.py");
-    const QString cmd("python3");
-    const QStringList args(script);
+    QFileInfo fileInfo(poshScriptName_);
 
-    emit noticeMessage("Launcing Script: " + cmd +  " " + script);
-    QProcess *scriptProcess = new QProcess();
-    if(scriptProcess){
+    if(fileInfo.exists() && fileInfo.isFile()){
 
-        scriptProcess->startDetached(cmd, args);
-        scriptProcess->waitForFinished();
-        scriptProcess->close();
+            const QString script(poshScriptName_);
+            const QString cmd("python3");
+            const QStringList args(script);
 
-        delete scriptProcess;
+            emit noticeMessage("Launcing Script: " + cmd +  " " + script);
+            QProcess *scriptProcess = new QProcess();
+            if(scriptProcess){
+
+                scriptProcess->startDetached(cmd, args);
+                scriptProcess->waitForFinished();
+                scriptProcess->close();
+
+                delete scriptProcess;
+            }
+
+            emit noticeMessage("Script Done");
+    } else {
+        emit errorMessage("Please select a valid script name by clicking"
+        " on the POSH configuration button");
+    }
+}
+
+//-----------------------------------------------------------------------------
+// Function: buildPoshSimulation()
+//-----------------------------------------------------------------------------
+void MainWindow::configPoshSimulation()
+{
+    QFileDialog scriptFile(this);
+
+    QStringList filters;
+    filters << "Python Files (*.py)";
+
+    scriptFile.setNameFilters(filters);
+    scriptFile.setViewMode(QFileDialog::Detail);
+
+    QStringList selectedFiles;
+
+    if(scriptFile.exec()){
+        selectedFiles = scriptFile.selectedFiles();
     }
 
-    emit noticeMessage("Script Done");
+    QStringListIterator it(selectedFiles);
+
+    if(false == selectedFiles.isEmpty()){
+        while(it.hasNext()){
+            poshScriptName_ = it.next();
+            emit noticeMessage("File Selected: " + poshScriptName_);
+            break;
+        }
+    }
 
     return;
 }
