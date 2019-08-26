@@ -1,14 +1,7 @@
-import sys
-
 def printMessage():
     print("")
     print("-----------------------------------------")
-    print("Running the POSH Simulation Generator....")
-    print("Arguments Count: ", len(sys.argv))
-    i=0;
-    for x in sys.argv:
-        print("Argument[", i ,"]: ", x)
-        i += 1
+    print("Running the POSH Simulation Generator...2")
     print("-----------------------------------------")
 
 def main():

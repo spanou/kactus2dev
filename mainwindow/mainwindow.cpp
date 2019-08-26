@@ -33,6 +33,7 @@
 #include <mainwindow/DrawingBoard/DrawingBoard.h>
 #include <mainwindow/SaveHierarchy/DocumentTreeBuilder.h>
 #include <mainwindow/SaveHierarchy/SaveHierarchyDialog.h>
+#include <mainwindow/PoshConfigDialog.h>
 
 #include <common/NameGenerationPolicy.h>
 #include <common/dialogs/LibrarySettingsDialog/LibrarySettingsDialog.h>
@@ -181,8 +182,9 @@ windowsMenu_(this),
 visibilityMenu_(this),
 workspaceMenu_(this),
 curWorkspaceName_("Default"),
+messageChannel_(messageChannel),
 poshScriptName_(""),
-messageChannel_(messageChannel)
+poshScriptEngine_("")
 {
     setWindowTitle(QCoreApplication::applicationName());
     setWindowIcon(QIcon(":icons/common/graphics/appicon.png"));
@@ -2137,7 +2139,7 @@ void MainWindow::buildPoshSimulation()
     if(fileInfo.exists() && fileInfo.isFile()){
 
             const QString script(poshScriptName_);
-            const QString cmd("python3");
+            const QString cmd(poshScriptEngine_);
             const QStringList args(script);
 
             emit noticeMessage("Launcing Script: " + cmd +  " " + script);
@@ -2163,6 +2165,7 @@ void MainWindow::buildPoshSimulation()
 //-----------------------------------------------------------------------------
 void MainWindow::configPoshSimulation()
 {
+/*
     QFileDialog scriptFile(this);
 
     QStringList filters;
@@ -2185,6 +2188,13 @@ void MainWindow::configPoshSimulation()
             emit noticeMessage("File Selected: " + poshScriptName_);
             break;
         }
+    }
+*/
+    PoshConfigDialog poshConfig;
+
+    if(QDialog::Accepted == poshConfig.exec()){
+        poshScriptName_ = poshConfig.getScriptName();
+        poshScriptEngine_ = poshConfig.getScriptEngine();
     }
 
     return;

@@ -119,6 +119,7 @@ HEADERS += ./editors/ComponentEditor/treeStructure/SingleIndirectInterfaceItem.h
     ./mainwindow/ExitScreen.h \
     ./mainwindow/DockWidgetHandler.h \
     ./mainwindow/NewWorkspaceDialog.h \
+    ./mainwindow/PoshConfigDialog.h \
     ./mainwindow/DeleteWorkspaceDialog.h \
     ./mainwindow/mainwindow.h \
     ./mainwindow/MessageConsole/messageconsole.h \
@@ -927,6 +928,7 @@ SOURCES += ./VersionHelper.cpp \
     ./mainwindow/main.cpp \
     ./mainwindow/mainwindow.cpp \
     ./mainwindow/NewWorkspaceDialog.cpp \
+    ./mainwindow/PoshConfigDialog.cpp \
     ./mainwindow/SplashScreen.cpp \
     ./mainwindow/NewPages/NewApiDefinitionPage.cpp \
     ./mainwindow/NewPages/NewBusDefinitionPage.cpp \
