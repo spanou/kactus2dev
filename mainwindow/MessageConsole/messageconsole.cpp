@@ -20,12 +20,12 @@
 //-----------------------------------------------------------------------------
 MessageConsole::MessageConsole(QWidget *parent):
 QPlainTextEdit(parent),
-    copyAction_(tr("Copy"), this),
-    selectAllAction_(tr("Select all"), this),
-    clearAction_(tr("Clear"), this)
+	copyAction_(tr("Copy"), this),
+	selectAllAction_(tr("Select all"), this),
+	clearAction_(tr("Clear"), this)
 {
 	setReadOnly(true);
-    setUndoRedoEnabled(false);
+	setUndoRedoEnabled(false);
 
 	copyAction_.setDisabled(true);
 
@@ -38,7 +38,7 @@ QPlainTextEdit(parent),
 //-----------------------------------------------------------------------------
 // Function: MessageConsole::~MessageConsole()
 //-----------------------------------------------------------------------------
-MessageConsole::~MessageConsole() 
+MessageConsole::~MessageConsole()
 {
 }
 
@@ -48,7 +48,7 @@ MessageConsole::~MessageConsole()
 void MessageConsole::onErrorMessage(QString const& message)
 {
 	if (message.isEmpty())
-    {
+	{
 		return;
 	}
 
@@ -56,7 +56,7 @@ void MessageConsole::onErrorMessage(QString const& message)
 
 	// errors are printed in red color
 	setTextColor(KactusColors::ERROR);
-    appendPlainText(message);
+	appendPlainText(message);
 }
 
 //-----------------------------------------------------------------------------
@@ -65,7 +65,7 @@ void MessageConsole::onErrorMessage(QString const& message)
 void MessageConsole::onNoticeMessage(QString const& message)
 {
 	if (message.isEmpty())
-    {
+	{
 		return;
 	}
 
@@ -94,7 +94,9 @@ void MessageConsole::contextMenuEvent(QContextMenuEvent* event)
 //-----------------------------------------------------------------------------
 void MessageConsole::setTextColor(QColor const& color)
 {
-    QTextCharFormat format = currentCharFormat();
-    format.setForeground(QBrush(color));
-    setCurrentCharFormat(format);
+	QTextCharFormat format = currentCharFormat();
+	format.setForeground(QBrush(color));
+	format.setFontFixedPitch(true);
+	format.setFont(QFont("Courier New", 10));
+	setCurrentCharFormat(format);
 }
