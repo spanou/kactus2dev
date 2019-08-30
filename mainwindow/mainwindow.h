@@ -24,6 +24,7 @@
 #include <QMenu>
 #include <QShowEvent>
 #include <QHideEvent>
+#include "PoshScriptProcess.h"
 
 class Component;
 class VLNV;
@@ -37,6 +38,7 @@ class Ribbon;
 class RibbonGroup;
 class DockWidgetHandler;
 class MessageMediator;
+class PoshScriptProcess;
 
 //-----------------------------------------------------------------------------
 //! The main window of Kactus2.
@@ -55,10 +57,10 @@ public:
      */
     MainWindow(LibraryHandler* library, MessageMediator* messageChannel, QWidget *parent = 0);
 
-	/*!
+    /*!
      *  The destructor.
      */
-	virtual ~MainWindow();
+    virtual ~MainWindow();
 
 public slots:
     /*!
@@ -109,7 +111,7 @@ public slots:
      *      @param [in] vlnv           The VLNV of the top-level component.
      *      @param [in] viewName       The name of the view to open.
      */
-	void openSWDesign(const VLNV& vlnv = VLNV(), QString const& viewName = QString());
+    void openSWDesign(const VLNV& vlnv = VLNV(), QString const& viewName = QString());
 
     /*!
      *  Opens a system design.
@@ -121,26 +123,26 @@ public slots:
 
     /*!
      *  Open bus to be edited.
-	 *
-	 *      @param [in] busDefVLNV      Identifies the bus definition.
-	 *      @param [in] absDefVLNV      Identifies the abstraction definition.
+     *
+     *      @param [in] busDefVLNV      Identifies the bus definition.
+     *      @param [in] absDefVLNV      Identifies the abstraction definition.
      *      @param [in] disableBusDef   Flag for forcing disable on bus definitino edits.
-	 */
-	void openBus(const VLNV& busDefVLNV, const VLNV& absDefVLNV = VLNV(), bool disableBusDef = false);
+     */
+    void openBus(const VLNV& busDefVLNV, const VLNV& absDefVLNV = VLNV(), bool disableBusDef = false);
 
-	/*!
+    /*!
      *  Open catalog editor to edit catalog details.
-	 *
-	 *      @param [in] vlnv           Identifies the catalog to edit.
-	 */
-	void openCatalog(const VLNV& vlnv);
+     *
+     *      @param [in] vlnv           Identifies the catalog to edit.
+     */
+    void openCatalog(const VLNV& vlnv);
 
-	/*!
+    /*!
      *  Open component editor to edit a component details.
-	 *
-	 *      @param [in] vlnv           Identifies the component to edit.
-	 */
-	void openComponent(const VLNV& vlnv);
+     *
+     *      @param [in] vlnv           Identifies the component to edit.
+     */
+    void openComponent(const VLNV& vlnv);
 
     /*!
      *  Opens a COM definition for editing.
@@ -162,33 +164,33 @@ public slots:
     //! Called when the user has selected another tab.
     void onDocumentChanged(int index);
 
-	/*!
+    /*!
      *  Search the file system for new IP-Xact libraries.
-	 *
-	 *  This slot is called when user clicks to search for IP-Xact files.
-	 */
-	void onLibrarySearch();
+     *
+     *  This slot is called when user clicks to search for IP-Xact files.
+     */
+    void onLibrarySearch();
 
-	/*!
+    /*!
      *  Called when user selects a component on the draw board.
-	 *
-	 *      @param [in] component   Pointer to the DiagramComponent instance that is selected.
-	 */
-	void onComponentSelected(ComponentItem* component);
+     *
+     *      @param [in] component   Pointer to the DiagramComponent instance that is selected.
+     */
+    void onComponentSelected(ComponentItem* component);
 
-	/*!
+    /*!
      *  Called when user selects an interface on the draw board.
-	 *
-	 *      @param [in] interface   Pointer to the interface instance that is selected.
-	 */
-	void onInterfaceSelected(ConnectionEndpoint* interface);
+     *
+     *      @param [in] interface   Pointer to the interface instance that is selected.
+     */
+    void onInterfaceSelected(ConnectionEndpoint* interface);
 
-	/*!
+    /*!
      *  Called when user selects a connection on the draw board.
-	 *
-	 *      @param [in] connection  Pointer to the connection that was selected.
-	 */
-	void onConnectionSelected(GraphicsConnection* connection);
+     *
+     *      @param [in] connection  Pointer to the connection that was selected.
+     */
+    void onConnectionSelected(GraphicsConnection* connection);
 
     //! Called when the menu strip needs to be updated.
     void updateMenuStrip();
@@ -202,8 +204,8 @@ public slots:
     //! Adds a new column to the current HW/System design.
     void addColumn();
 
-	//! Generates the documentation for the current component/design.
-	void generateDoc();
+    //! Generates the documentation for the current component/design.
+    void generateDoc();
 
     /*!
      *  Runs the plugin generator specified by the given action.
@@ -244,7 +246,7 @@ public slots:
      *  Creates a new component to the library.
      *
      *      @param [in] prodHier    The product hierarchy attribute.
-     *      @param [in] firmness	The firmness attribute.
+     *      @param [in] firmness    The firmness attribute.
      *      @param [in] vlnv        The component's VLNV.
      *      @param [in] directory   The directory where to save the component.
      *
@@ -267,7 +269,7 @@ public slots:
      *  Creates a new design.
      *
      *      @param [in] prodHier    The product hierarchy attribute.
-     *      @param [in] firmness	The firmness attribute.
+     *      @param [in] firmness    The firmness attribute.
      *      @param [in] vlnv        The component's VLNV.
      *      @param [in] directory   The directory where to save the component.
      *
@@ -322,20 +324,20 @@ public slots:
 
     /*!
      *  Creates a new bus definition and abstraction definition
-	 *
-	 *      @param [in] vlnv        The vlnv for the bus definition
-	 *      @param [in] directory   The directory where to save the bus definition and abstraction definition.
-	 */
-	void createBus(VLNV const& vlnv, QString const& directory);
+     *
+     *      @param [in] vlnv        The vlnv for the bus definition
+     *      @param [in] directory   The directory where to save the bus definition and abstraction definition.
+     */
+    void createBus(VLNV const& vlnv, QString const& directory);
 
-	/*!
+    /*!
      *  Creates a new abstraction definition for given bus definition.
-	 *
-	 *      @param [in] busDefVLNV      Identifies the bus definition.
-	 *      @param [in] directory       The directory where to save the abstraction definition.
-	 *      @param [in] disableBusDef   If true then the bus definition editor is disabled when editor is opened.
-	 */
-	void createAbsDef(const VLNV& busDefVLNV, const QString& directory, bool disableBusDef);
+     *
+     *      @param [in] busDefVLNV      Identifies the bus definition.
+     *      @param [in] directory       The directory where to save the abstraction definition.
+     *      @param [in] disableBusDef   If true then the bus definition editor is disabled when editor is opened.
+     */
+    void createAbsDef(const VLNV& busDefVLNV, const QString& directory, bool disableBusDef);
 
     /*!
      *  Creates a new COM definition.
@@ -379,39 +381,39 @@ public slots:
 
 signals:
 
-	//! Print a notice message to the user.
-	void noticeMessage(const QString& msg);
+    //! Print a notice message to the user.
+    void noticeMessage(const QString& msg);
 
-	//! Print an error message to the user.
-	void errorMessage(const QString& msg);
+    //! Print an error message to the user.
+    void errorMessage(const QString& msg);
 
     //! Emitted when a help page should be changed in the context help window.
     void helpUrlRequested(QString const& url);
 
 protected:
 
-	//! Called when the user requests to close the program.
+    //! Called when the user requests to close the program.
     virtual void closeEvent(QCloseEvent* event);
 
-	//! Called when user i.e minimizes the main window.
-	virtual void hideEvent(QHideEvent* event);
+    //! Called when user i.e minimizes the main window.
+    virtual void hideEvent(QHideEvent* event);
 
-	//! Called when user i.e maximizes the main window after it has been minimized.
-	virtual void showEvent(QShowEvent* event);
+    //! Called when user i.e maximizes the main window after it has been minimized.
+    virtual void showEvent(QShowEvent* event);
 
 
 private slots:
-	//! Handler for design widget's clearItemSelection signal.
-	void onClearItemSelection();
+    //! Handler for design widget's clearItemSelection signal.
+    void onClearItemSelection();
 
-	//! Handler for signals that inform that design has changed.
-	void onDesignChanged();
+    //! Handler for signals that inform that design has changed.
+    void onDesignChanged();
 
     //! Saves the document hierarchy under current document.
     void saveCurrentDocumentHierarchy();
 
-	//! Create a pop up menu to select which dock widgets to display.
-	void selectVisibleDocks();
+    //! Create a pop up menu to select which dock widgets to display.
+    void selectVisibleDocks();
 
     //! Opens the visibility control menu.
     void openVisibilityControlMenu();
@@ -531,8 +533,8 @@ private slots:
     void onAdjustVisibilityInWindow(TabDocument::SupportedWindows type, bool show);
 
 private:
-	// Disable copying.
-	MainWindow(MainWindow const& rhs);
+    // Disable copying.
+    MainWindow(MainWindow const& rhs);
     MainWindow& operator=(MainWindow const& rhs);
 
     /*!
@@ -554,27 +556,27 @@ private:
 
     /*!
      *  Restores the program's settings.
-	 */
-	void restoreSettings();
+     */
+    void restoreSettings();
 
-	/*!
+    /*!
      *  Save the program's settings.
-	 */
-	void saveSettings();
+     */
+    void saveSettings();
 
-	/*!
-	 *  Copy the component editor settings from the current workspace.
-	 *
-	 *      @param [in] workspaceName   The name of the new workspace.
-	 */
-	void copyComponentEditorSettings(QString workspaceName);
+    /*!
+     *  Copy the component editor settings from the current workspace.
+     *
+     *      @param [in] workspaceName   The name of the new workspace.
+     */
+    void copyComponentEditorSettings(QString workspaceName);
 
-	/*!
-	 *  Creates a new workspace.
-	 *
-	 *      @param [in] workspaceName   The name of the new workspace.
-	 */
-	void createNewWorkspace(QString workspaceName);
+    /*!
+     *  Creates a new workspace.
+     *
+     *      @param [in] workspaceName   The name of the new workspace.
+     */
+    void createNewWorkspace(QString workspaceName);
 
     /*!
      *  Updates the workspace menu.
@@ -595,18 +597,18 @@ private:
      */
     void saveWorkspace(QString const& workspaceName);
 
-	/*!
+    /*!
      *  Set up the actions in the tool bars
-	 */
-	void setupActions();
+     */
+    void setupActions();
 
-	/*!
+    /*!
      *  Set up the menus for the main window.
-	 *
-	 *  This function is used by the setupActions() after it has created the actions for the menus and should not
+     *
+     *  This function is used by the setupActions() after it has created the actions for the menus and should not
      *  be called directly.
-	 */
-	void setupMenus();
+     */
+    void setupMenus();
 
     /*!
      *  Adds generator plugin actions to the generation group.
@@ -618,10 +620,10 @@ private:
      */
     void updateGeneratorPluginActions();
 
-	/*!
+    /*!
      *  Set up the drawing view where hierarchical components are edited.
-	 */
-	void setupDrawBoard();
+     */
+    void setupDrawBoard();
 
     /*!
      *  Connect the necessary signals of the dock widget handler.
@@ -633,20 +635,20 @@ private:
      */
     void setupAndConnectLibraryHandler();
 
-	/*!
+    /*!
      *  Check if a document with the given vlnv is already open.
-	 *
-	 *      @param [in] vlnv    The vlnv that identifies the document.
-	 *
-	 *      @remark If a document with given vlnv is open then the document is shown.
-	 *
-	 *      @return True if the document was already open.
-	 */
-	bool isOpen(const VLNV& vlnv) const;
+     *
+     *      @param [in] vlnv    The vlnv that identifies the document.
+     *
+     *      @remark If a document with given vlnv is open then the document is shown.
+     *
+     *      @return True if the document was already open.
+     */
+    bool isOpen(const VLNV& vlnv) const;
 
-	/*!
-	 *  Update the windows menu to contain the supported windows and visibility of the windows.
-	 */
+    /*!
+     *  Update the windows menu to contain the supported windows and visibility of the windows.
+     */
     void updateWindows();
 
     /*!
@@ -675,37 +677,37 @@ private:
     void runComponentWizard(QSharedPointer<Component> component, QString const& directory);
 
 
-	/*!
-	 *  Set the visibilities for the plug ins.
-	 */
-	void setPluginVisibilities();
+    /*!
+     *  Set the visibilities for the plug ins.
+     */
+    void setPluginVisibilities();
 
     //-----------------------------------------------------------------------------
     // Data.
     //-----------------------------------------------------------------------------
 
-	//! The instance that manages the IP-Xact library
+    //! The instance that manages the IP-Xact library
     LibraryHandler *libraryHandler_;
 
-	//! Contains the open documents as each in it's own tab.
-	DrawingBoard* designTabs_;
+    //! Contains the open documents as each in it's own tab.
+    DrawingBoard* designTabs_;
 
     //! The dock widget handler.
     DockWidgetHandler* dockHandler_;
 
-	/*******************************************************************/
-	// the actions in the menus
+    /*******************************************************************/
+    // the actions in the menus
 
     Ribbon* ribbon_;
 
-	//! Create a new document in the IP-Xact library
-	QAction* actNew_;
+    //! Create a new document in the IP-Xact library
+    QAction* actNew_;
 
     //! Action to save the current design.
     QAction* actSave_;
 
-	//! Action to save the current design as new object
-	QAction* actSaveAs_;
+    //! Action to save the current design as new object
+    QAction* actSaveAs_;
 
     QAction* actSaveHierarchy_;
 
@@ -730,11 +732,11 @@ private:
     //! Action to set library locations.
     QAction* actLibraryLocations_;
 
-	//! Search for IP-Xact files in the file system
-	QAction* actLibrarySearch_;
+    //! Search for IP-Xact files in the file system
+    QAction* actLibrarySearch_;
 
-	//! Check the library integrity
-	QAction* actCheckIntegrity_;
+    //! Check the library integrity
+    QAction* actCheckIntegrity_;
 
     //! The generation group.
     RibbonGroup* generationGroup_;
@@ -742,8 +744,8 @@ private:
     //! Action group for plugin generators.
     QActionGroup* pluginActionGroup_;
 
-	//! Action to generate the documentation for a component.
-	QAction* actGenDocumentation_;
+    //! Action to generate the documentation for a component.
+    QAction* actGenDocumentation_;
 
     //! Action to run import wizard.
     QAction* actRunImport_;
@@ -784,8 +786,8 @@ private:
     //! Action to adjust zoom to fit the document fully in view.
     QAction* actFitInView_;
 
-	//! Action to select which dock widgets are visible.
-	QAction* actVisibleDocks_;
+    //! Action to select which dock widgets are visible.
+    QAction* actVisibleDocks_;
 
     //! Action to manage visibility control.
     QAction* actVisibilityControl_;
@@ -861,8 +863,8 @@ private:
     //! The action to filter unconnected memory items in a memory design.
     QAction* actionFilterUnconnectedMemoryItems_;
 
-	//! The menu containing the actions to select which windows to display.
-	QMenu windowsMenu_;
+    //! The menu containing the actions to select which windows to display.
+    QMenu windowsMenu_;
 
     //! Menu which contains the actions for visibility control.
     QMenu visibilityMenu_;
@@ -878,6 +880,7 @@ private:
     //! The name of the posh script file and engine.
     QString poshScriptName_;
     QString poshScriptEngine_;
+    PoshScriptProcess poshProcess_;
 };
 
 #endif // MAINWINDOW_H
