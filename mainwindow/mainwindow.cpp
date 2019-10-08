@@ -34,8 +34,6 @@
 #include <mainwindow/SaveHierarchy/DocumentTreeBuilder.h>
 #include <mainwindow/SaveHierarchy/SaveHierarchyDialog.h>
 #include <mainwindow/PoshConfigDialog.h>
-//#include <mainwindow/PoshScriptProcess.h>
-
 #include <common/NameGenerationPolicy.h>
 #include <common/dialogs/LibrarySettingsDialog/LibrarySettingsDialog.h>
 #include <common/dialogs/NewDesignDialog/NewDesignDialog.h>
@@ -2136,32 +2134,31 @@ void MainWindow::openSettings()
 //-----------------------------------------------------------------------------
 void MainWindow::buildPoshSimulation()
 {
+
+    if(poshScriptName_.isEmpty() || poshScriptEngine_.isEmpty()){
+        emit errorMessage("Please click on the POSH configuration button"
+        " to specify which script to launch.");
+        return;
+    }
+
     QFileInfo fileInfo(poshScriptName_);
     QProcess& scriptProcess = poshProcess_.getProcess();
 
-    if(fileInfo.exists() && fileInfo.isFile()){
-        const QString script(poshScriptName_);
-        const QString cmd(poshScriptEngine_);
-        const QStringList args(script);
-
-        scriptProcess.start(cmd, args);
-
-    } else {
-        emit errorMessage("Please select a valid script name by clicking"
-        " on the POSH configuration button");
-    }
+    const QString script(poshScriptName_);
+    const QString cmd(poshScriptEngine_);
+    scriptProcess.start(cmd + " " + script);
 }
 
 //-----------------------------------------------------------------------------
-// Function: buildPoshSimulation()
+// Function: configPoshSimulation()
 //-----------------------------------------------------------------------------
 void MainWindow::configPoshSimulation()
 {
     PoshConfigDialog poshConfig;
 
     if(QDialog::Accepted == poshConfig.exec()){
-        poshScriptName_ = poshConfig.getScriptName();
-        poshScriptEngine_ = poshConfig.getScriptEngine();
+        poshScriptName_ = poshConfig.getScriptName().trimmed();
+        poshScriptEngine_ = poshConfig.getScriptEngine().trimmed();
     }
 
     return;
