@@ -2134,17 +2134,113 @@ void MainWindow::openSettings()
 //-----------------------------------------------------------------------------
 void MainWindow::buildPoshSimulation()
 {
-
     if(poshScriptName_.isEmpty() || poshScriptEngine_.isEmpty()){
         emit errorMessage("Please click on the POSH configuration button"
         " to specify which script to launch.");
         return;
     }
 
+    QString paramLibsPaths("");
+    QString paramDesignFile("");
+
+#if(1)
+    TabDocument* doc = static_cast<TabDocument*>(designTabs_->currentWidget());
+
+    if(doc){
+        DesignWidget* currentDesignWidget = static_cast<DesignWidget*>(doc);
+
+        if(currentDesignWidget){
+
+          paramLibsPaths ="--libraries ";
+          paramDesignFile = "--platform ";
+
+          //
+          // Pull the VLNV from the design in the current view
+          //
+          VLNV vlnvDesign = currentDesignWidget->getIdentifyingVLNV();
+          VLNV::IPXactType type = vlnvDesign.getType();
+          //
+          // If the type is anything else other than VLNV::DESIGN warn
+          // the user and exit gracefully.
+          //
+          if(type != VLNV::DESIGN){
+            emit errorMessage("Please Open a Hardware Design before clicking on "
+              "the POSH Run Simulation button.");
+            return;
+          }
+          //
+          // If the Vendor of the design is anyone else other than Xilinx
+          // warn the user and exit gracefully. This is a temporary check.
+          //
+          QString vendor = vlnvDesign.getVendor();
+          if(0 != QString::compare(vendor, "xilinx", Qt::CaseInsensitive)){
+            emit errorMessage("POSH Run Simulation Is currently supported for "
+              "Xilinx designs only.");
+            return;
+          }
+          //
+          // All current checks are ok, retrieve the design's XML file.
+          //
+          QString designFile = libraryHandler_->getPath(vlnvDesign);
+          emit noticeMessage("\nCurrent Design File: " + designFile);
+          paramDesignFile += designFile;
+
+          //
+          // Find all the dependent VLNVs for the current design.
+          //
+          QMap<QString, QString> vlnvRootPaths;
+          QList<VLNV> depVLNVs;
+          libraryHandler_->getNeededVLNVs(vlnvDesign, depVLNVs);
+          emit noticeMessage("\nThe Current Design comprises of the following "
+            + QString::number(depVLNVs.count()) + " components :\n");
+          //
+          // Go through all the dependant VLNVs and store their root paths.
+          //
+          for(int i = 0; i < depVLNVs.count(); ++i){
+            QString libPath = libraryHandler_->getPath(depVLNVs.at(i));
+            QFileInfo lbInfo(libPath);
+            QDir lbDir =  lbInfo.absoluteDir();
+            // Traverse Back on the VLNV
+            lbDir.cdUp();lbDir.cdUp();lbDir.cdUp();lbDir.cdUp();
+            vlnvRootPaths.insert(depVLNVs.at(i).toString(), lbDir.absolutePath());
+            emit noticeMessage("    " + depVLNVs.at(i).toString()
+              + "\n      [" + libPath+ "]\n");
+          }
+
+          //
+          // Use the libPathMap to eliminate duplicate root paths.
+          //
+          int count = 0;
+          QMapIterator<QString, QString> itLibPaths(vlnvRootPaths);
+          QMap<QString, int> libPathMap;
+          while(itLibPaths.hasNext()){
+            itLibPaths.next();
+            libPathMap.insert(itLibPaths.value(), count++);
+          }
+
+          //
+          // Print the VLNVs and their root paths
+          //
+          count = 0;
+          QMapIterator<QString, int> it(libPathMap);
+          while(it.hasNext()){
+            it.next();
+
+            if(count != 0){
+              paramLibsPaths += ";";
+            }
+
+            paramLibsPaths += it.key();
+            ++count;
+          }
+        }
+    }
+#endif
     QFileInfo fileInfo(poshScriptName_);
     QProcess& scriptProcess = poshProcess_.getProcess();
 
-    const QString script(poshScriptName_);
+    const QString script(poshScriptName_ + " " + paramDesignFile
+      + " " + paramLibsPaths);
     const QString cmd(poshScriptEngine_);
     scriptProcess.start(cmd + " " + script);
 }

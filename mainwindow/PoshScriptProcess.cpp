@@ -79,7 +79,7 @@ void PoshScriptProcess::onReadyReadStandardError(){
 }
 
 void PoshScriptProcess::onStarted(){
-    QString command = QString("Process Launched: %1 %2").
+    QString command = QString("\n\n\nProcess Launched: %1 %2").
         arg(theProcess.program(), theProcess.arguments().join(" "));
 
     emit ((MainWindow*)parent())->noticeMessage(command);
