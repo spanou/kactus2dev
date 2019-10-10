@@ -2173,7 +2173,7 @@ void MainWindow::buildPoshSimulation()
           // warn the user and exit gracefully. This is a temporary check.
           //
           QString vendor = vlnvDesign.getVendor();
-          if(0 != QString::compare(vendor, "xilinx", Qt::CaseInsensitive)){
+          if(false == vendor.contains("xilinx", Qt::CaseInsensitive)){
             emit errorMessage("POSH Run Simulation Is currently supported for "
               "Xilinx designs only.");
             return;
@@ -2182,8 +2182,12 @@ void MainWindow::buildPoshSimulation()
           // All current checks are ok, retrieve the design's XML file.
           //
           QString designFile = libraryHandler_->getPath(vlnvDesign);
+          QString component = designFile;
+          component.replace( QString(".design."), QString("."), Qt::CaseInsensitive);
+
           emit noticeMessage("\nCurrent Design File: " + designFile);
-          paramDesignFile += designFile;
+          emit noticeMessage("\nCurrent Component File: " + component);
+          paramDesignFile += component;
 
           //
           // Find all the dependent VLNVs for the current design.
@@ -2227,7 +2231,7 @@ void MainWindow::buildPoshSimulation()
             it.next();
 
             if(count != 0){
-              paramLibsPaths += ";";
+              paramLibsPaths += " ";
             }
 
             paramLibsPaths += it.key();

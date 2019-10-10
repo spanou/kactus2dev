@@ -14,7 +14,7 @@
 PoshConfigDialog::PoshConfigDialog(QWidget *parent) :
     QDialog(parent){
 
-    strScriptEngine = "/usr/bin/python3";
+    strScriptEngine = "/usr/bin/python";
 
     scriptEngine = new QLineEdit;
     scriptFile = new QLineEdit;
