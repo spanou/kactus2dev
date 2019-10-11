@@ -209,6 +209,27 @@ In addition, Kactus2 uses the file configure.cfg for updating the users' setting
 new setting options are introduced in the tool. Please do not modify this file as it will
 break the compatibility with earlier versions.
 
+POSH Simulation
+----------------------------------------------------
+### Building Kactus2 
+Please follow the instructions above on the section "1. Install Qt5", "2. Build the sources" and "3a. Run Kactus2 GUI".
+
+### Adding The POSH IP Library 
+1. Please locate the folder/directory where you installed libsystemctlm-soc
+2. From the top menu ribbon locate the "Library" section and click on the Configure Library menu item. 
+3. With the Configure Library dialog open, click on the (+) icon on the right hand side and from the File Dialog select the location of the folder from Step 1. Ensure you set it as the default and active before clicking the ok button.
+4.  Done, you should be able to see your library of IPs located on the left hand side of the window under the VLNV Tree. 
+
+### Running The Simulation
+1. From the VLNV Tree, expand the xilinx.com collection and the traverse it all the way down to the desing you would like to simulate.
+2. Select the design you want to simulate, right click and from the context menu select "Open HW Design" 
+3. The selected design hardware view will open in the main pane.
+4. From the main menu ribbon scroll all the way to the right of the ribbon(some times this is hidden depending on the size/resolution of your display) and locate the section POSH. 
+5. Select the icon with the little gears to configure the simulation parameters. 
+6. Once you have verified the script name, arguments and script engine click on OK. 
+7. Locate and click on the thunder bolt icon to launch the simulation 
+8. The output window will provide you with a status of the build 
+
 Community Guidelines & Contributions
 ----------------------------------------------------
 Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
