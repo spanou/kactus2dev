@@ -878,8 +878,6 @@ private:
     MessageMediator* messageChannel_;
 
     //! The name of the posh script file and engine.
-    QString poshScriptName_;
-    QString poshScriptEngine_;
     PoshScriptProcess poshProcess_;
 };
 

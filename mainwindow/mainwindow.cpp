@@ -182,8 +182,6 @@ visibilityMenu_(this),
 workspaceMenu_(this),
 curWorkspaceName_("Default"),
 messageChannel_(messageChannel),
-poshScriptName_(""),
-poshScriptEngine_(""),
 poshProcess_(this)
 {
     setWindowTitle(QCoreApplication::applicationName());
@@ -2134,16 +2132,9 @@ void MainWindow::openSettings()
 //-----------------------------------------------------------------------------
 void MainWindow::buildPoshSimulation()
 {
-    if(poshScriptName_.isEmpty() || poshScriptEngine_.isEmpty()){
-        emit errorMessage("Please click on the POSH configuration button"
-        " to specify which script to launch.");
-        return;
-    }
-
     QString paramLibsPaths("");
     QString paramDesignFile("");
 
-#if(1)
     TabDocument* doc = static_cast<TabDocument*>(designTabs_->currentWidget());
 
     if(doc){
@@ -2238,15 +2229,32 @@ void MainWindow::buildPoshSimulation()
             ++count;
           }
         }
+    } else {
+      emit errorMessage("Please Open a Hardware Design before clicking on "
+        "the POSH Run Simulation button.");
+      return;
     }
-#endif
-    QFileInfo fileInfo(poshScriptName_);
+
+    QSettings poshSettings;
     QProcess& scriptProcess = poshProcess_.getProcess();
 
-    const QString script(poshScriptName_ + " " + paramDesignFile
-      + " " + paramLibsPaths);
-    const QString cmd(poshScriptEngine_);
-    scriptProcess.start(cmd + " " + script);
+    const QString cmd(poshSettings.value("poshSettings/scriptEngine",
+      QVariant("echo")).toString());
+
+    const QString script(poshSettings.value("poshSettings/scriptFile",
+      QVariant("Plase Click on POSH Config Dialog First")).toString());
+
+    const QString scriptArgs(poshSettings.value("poshSettings/scriptArgs",
+      QVariant("Plase Click on POSH Config Dialog First")).toString());
+
+    //emit noticeMessage("Settings File Name: " + poshSettings.fileName());
+
+    scriptProcess.start(
+        cmd + " \"" +
+        script + " " +
+        scriptArgs +
+        paramDesignFile +
+        paramLibsPaths + "\" ");
 }
 
 //-----------------------------------------------------------------------------
@@ -2254,11 +2262,11 @@ void MainWindow::buildPoshSimulation()
 //-----------------------------------------------------------------------------
 void MainWindow::configPoshSimulation()
 {
-    PoshConfigDialog poshConfig;
+    QSettings settings;
+    PoshConfigDialog poshConfig(settings);
 
     if(QDialog::Accepted == poshConfig.exec()){
-        poshScriptName_ = poshConfig.getScriptName().trimmed();
-        poshScriptEngine_ = poshConfig.getScriptEngine().trimmed();
+      // Do Nothing for now
     }
 
     return;

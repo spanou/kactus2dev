@@ -7,17 +7,16 @@ class QHBoxLayout;
 class QVBoxLayout;
 class QLineEdit;
 class QDialogButtonBox;
+class QSettings;
 
 class PoshConfigDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit PoshConfigDialog(QWidget *parent = nullptr);
+    explicit PoshConfigDialog(QSettings& settings, QWidget *parent = nullptr);
     ~PoshConfigDialog();
-
-    QString& getScriptName(){return strScriptFile;}
-    QString& getScriptEngine(){return strScriptEngine;}
+    QSettings& getSettings(){return poshConfigSettings;}
 
 public slots:
     void onClickedScriptFileButton();
@@ -26,9 +25,12 @@ public slots:
 
 private:
     PoshConfigDialog *ui;
-    QHBoxLayout* hBox;
+    QHBoxLayout* hBox1;
+    QHBoxLayout* hBox2;
+    QHBoxLayout* hBox3;
     QVBoxLayout* vBox;
     QLineEdit* scriptEngine;
+    QLineEdit* scriptArgs;
     QLineEdit* scriptFile;
     QPushButton* scriptFileButton;
 
@@ -36,10 +38,9 @@ private:
     QPushButton* ok;
     QPushButton* cancel;
 
-    QString strScriptFile;
-    QString strScriptEngine;
+    QSettings& poshConfigSettings;
 
-    enum {MIN_WIDTH = 600, MAX_HEIGHT=180};
+    enum {MIN_WIDTH = 800, MAX_HEIGHT=180, LABEL_WIDTH=120};
 };
 
 #endif // POSHCONFIGDIALOG_H
