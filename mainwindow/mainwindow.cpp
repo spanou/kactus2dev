@@ -2142,8 +2142,8 @@ void MainWindow::buildPoshSimulation()
 
         if(currentDesignWidget){
 
-          paramLibsPaths ="--libraries ";
-          paramDesignFile = "--platform ";
+          paramLibsPaths =" --libraries ";
+          paramDesignFile = " --platform ";
 
           //
           // Pull the VLNV from the design in the current view
