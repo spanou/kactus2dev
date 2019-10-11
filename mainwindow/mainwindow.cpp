@@ -2247,8 +2247,6 @@ void MainWindow::buildPoshSimulation()
     const QString scriptArgs(poshSettings.value("poshSettings/scriptArgs",
       QVariant("-o /tmp/outdir --build --run ")).toString());
 
-    emit noticeMessage("Settings File Name: " + poshSettings.fileName());
-
     scriptProcess.start(
         cmd + " \"" +
         script + " " +
