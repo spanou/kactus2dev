@@ -230,6 +230,8 @@ Please follow the instructions above on the section "1. Install Qt5", "2. Build 
 7. Locate and click on the thunder bolt icon to launch the simulation 
 8. The output window will provide you with a status of the build 
 
+__Full details of the POSH Mixed Simulation Demo can be found [here](https://github.com/Xilinx/systemctlm-cosim-demo/blob/master/zynqmp_lmac2_ipxact_demo.txt)__ 
+
 Community Guidelines & Contributions
 ----------------------------------------------------
 Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
