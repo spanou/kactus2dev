@@ -2239,15 +2239,15 @@ void MainWindow::buildPoshSimulation()
     QProcess& scriptProcess = poshProcess_.getProcess();
 
     const QString cmd(poshSettings.value("poshSettings/scriptEngine",
-      QVariant("echo")).toString());
+      QVariant("/bin/bash -c ")).toString());
 
     const QString script(poshSettings.value("poshSettings/scriptFile",
-      QVariant("Plase Click on POSH Config Dialog First")).toString());
+      QVariant("pysimgen ")).toString());
 
     const QString scriptArgs(poshSettings.value("poshSettings/scriptArgs",
-      QVariant("Plase Click on POSH Config Dialog First")).toString());
+      QVariant("-o /tmp/outdir --build --run ")).toString());
 
-    //emit noticeMessage("Settings File Name: " + poshSettings.fileName());
+    emit noticeMessage("Settings File Name: " + poshSettings.fileName());
 
     scriptProcess.start(
         cmd + " \"" +
